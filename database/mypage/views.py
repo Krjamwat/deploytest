@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render,redirect
 from django.contrib import messages
-from mypage.models import creativereser, peer1reser, peer2reser, peer3reser
+from mypage.models import creativereser,peer1reser,peer2reser, peer3reser
 from datetime import datetime, timedelta
 
 # Create your views here.
@@ -12,7 +12,7 @@ def is_not_integer(value):
         return True
 
 def index(request):
-    return render(request, "index.html")
+    return render(request,"index.html")
 
 def test(request):
     return render(request, 'test.html')
@@ -25,12 +25,12 @@ def room(request):
     list_personpeer1 = peer1reser.objects.order_by('event_datepeer1')
     list_personpeer2 = peer2reser.objects.order_by('event_datepeer2')
     list_personpeer3 = peer3reser.objects.order_by('event_datepeer3')
-    return render(request, "checkscreative.html", {
-        "list_person": list_person,
-        "list_personpeer1": list_personpeer1,
-        "list_personpeer2": list_personpeer2,
+    return render(request,"checkscreative.html",{
+        "list_person":list_person,
+        "list_personpeer1":list_personpeer1,
+        "list_personpeer2":list_personpeer2,
         "list_personpeer3": list_personpeer3
-    })
+        })
 
 def creative(request):
     if request.method == 'POST':
@@ -43,6 +43,7 @@ def creative(request):
         start_time = datetime.strptime(start_input, '%H:%M').time()
         end_time = datetime.strptime(end_input, '%H:%M').time()
 
+
         overlapping_bookings = creativereser.objects.filter(
             event_date=date_input,
             start_time__lt=end_time,
@@ -54,26 +55,27 @@ def creative(request):
 
         if is_not_integer(id_input):
             messages.error(request, "Invalid input: Student ID must be an integer!")
-            return redirect("creative")
+            return redirect("creative.html")
 
         if exceed_3hr_bookings:
-            messages.error(request, "The room has been booked for more than 3 hours. Please enter a different time slot!")
-            return redirect("creative")
+            messages.error(request, "The room has been more than 3 hours. Please enter a different time slot!")
+            return redirect("creative.html")
 
         if overlapping_bookings:
             messages.error(request, "The room has been booked during that time. Please enter a different time slot!")
-            return redirect("creative")
-        
-        creativereser.objects.create(
+            return redirect("creative.html")
+        form = creativereser.objects.create(
             student_id=id_input,
             name=name_inputpeer1,
             event_date=date_input,
             start_time=start_time,
             end_time=end_time
         )
-        return redirect("checkscreative")
+        form.save()
+        return redirect("checkscreative.html")
     else:
         return render(request, "creative.html")
+
 
 def peer1(request):
     if request.method == 'POST':
@@ -92,29 +94,30 @@ def peer1(request):
             end_timepeer1__gt=start_time_1
         ).exists()
 
-        diff_time = datetime.strptime(start_inputpeer1, '%H:%M') - datetime.strptime(end_inputpeer1, '%H:%M')
+        diff_time = datetime.strptime(start_inputpeer1, '%H:%M') - datetime.strptime(start_inputpeer1, '%H:%M')
         exceed_3hr_bookings = abs(diff_time) > timedelta(hours=3)
 
         if is_not_integer(id_inputpeer1):
             messages.error(request, "Invalid input: Student ID must be an integer!")
-            return redirect("peer1")
+            return redirect("creative.html")
 
         if exceed_3hr_bookings:
-            messages.error(request, "The room has been booked for more than 3 hours. Please enter a different time slot!")
-            return redirect("peer1")
+            messages.error(request, "The room has been more than 3 hours. Please enter a different time slot!")
+            return redirect("creative.html")
 
         if overlapping_bookings:
             messages.error(request, "The room has been booked during that time. Please enter a different time slot!")
-            return redirect("peer1")
+            return redirect("peer1.html")
 
-        peer1reser.objects.create(
+        form = peer1reser.objects.create(
             student_idpeer1=id_inputpeer1,
             namepeer1=name_inputpeer1,
             event_datepeer1=date_inputpeer1,
             start_timepeer1=start_time_1,
             end_timepeer1=end_time_1
         )
-        return redirect("checkscreative")
+        form.save()
+        return redirect("checkscreative.html")
     else:
         return render(request, "peer1.html")
 
@@ -140,24 +143,25 @@ def peer2(request):
 
         if is_not_integer(id_inputpeer2):
             messages.error(request, "Invalid input: Student ID must be an integer!")
-            return redirect("peer2")
+            return redirect("peer2.html")
 
         if exceed_3hr_bookings:
-            messages.error(request, "The room has been booked for more than 3 hours. Please enter a different time slot!")
-            return redirect("peer2")
+            messages.error(request, "The room has been more than 3 hours. Please enter a different time slot!")
+            return redirect("peer2.html")
 
         if overlapping_bookings:
             messages.error(request, "The room has been booked during that time. Please enter a different time slot!")
-            return redirect("peer2")
+            return redirect("peer2.html")
 
-        peer2reser.objects.create(
+        form = peer2reser.objects.create(
             student_idpeer2=id_inputpeer2,
             namepeer2=name_inputpeer2,
             event_datepeer2=date_inputpeer2,
             start_timepeer2=start_time_2,
             end_timepeer2=end_time_2
         )
-        return redirect("checkscreative")
+        form.save()
+        return redirect("checkscreative.html")
     else:
         return render(request, "peer2.html")
 
@@ -183,23 +187,25 @@ def peer3(request):
 
         if is_not_integer(id_inputpeer3):
             messages.error(request, "Invalid input: Student ID must be an integer!")
-            return redirect("peer3")
+            return redirect("peer3.html")
 
         if exceed_3hr_bookings:
-            messages.error(request, "The room has been booked for more than 3 hours. Please enter a different time slot!")
-            return redirect("peer3")
+            messages.error(request, "The room has been more than 3 hours. Please enter a different time slot!")
+            return redirect("peer3.html")
 
         if overlapping_bookings:
             messages.error(request, "The room has been booked during that time. Please enter a different time slot!")
-            return redirect("peer3")
+            return redirect("peer3.html")
 
-        peer3reser.objects.create(
+        form = peer3reser.objects.create(
             student_idpeer3=id_inputpeer3,
             namepeer3=name_inputpeer3,
             event_datepeer3=date_inputpeer3,
             start_timepeer3=start_time_3,
             end_timepeer3=end_time_3
         )
-        return redirect("checkscreative")
+        form.save()
+        return redirect("checkscreative.html")
     else:
         return render(request, "peer3.html")
+
