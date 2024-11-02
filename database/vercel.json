@@ -6,6 +6,6 @@
     }],
     "routes": [
         { "src": "/static/(.*)", "dest": "/static/$1" },
-        { "src": "/(.*)", "dest": "./database/wsgi.py" }
+        { "src": "/(.*)", "dest": "./database/asgi.py" }
     ]
 }
