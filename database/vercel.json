@@ -2,13 +2,13 @@
   "version": 2,
   "builds": [
       {
-          "src": "./database/wsgi.py",
+          "src": "database/database/wsgi.py",
           "use": "@vercel/python",
           "config": { "runtime": "python3.12" }
       }
   ],
   "routes": [
       { "src": "/static/(.*)", "dest": "/static/$1" },
-      { "src": "/(.*)", "dest": "./database/wsgi.py" }
+      { "src": "/(.*)", "dest": "database/database/wsgi.py" }
   ]
 }
