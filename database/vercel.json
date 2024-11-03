@@ -3,7 +3,7 @@
   "builds": [
       {
           "src": "database/database/wsgi.py",
-          "use": "@vercel/python",
+          "use": "@ardnt/vercel-python-wsgi",
           "config": { "runtime": "python3.12" }
       }
   ],
